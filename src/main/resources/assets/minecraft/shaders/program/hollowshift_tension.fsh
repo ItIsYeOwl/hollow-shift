@@ -51,10 +51,12 @@ void main() {
     // A cold cast.
     col *= mix(vec3(1.0), vec3(0.93, 0.97, 1.04), t);
 
-    // Harder contrast: shadows become opaque.
-    col = (col - 0.5) * (1.0 + t * 0.3) + 0.5;
-    col -= t * 0.035;
+    // Harder contrast that only pushes downward: shadows become opaque, highlights dim
+    // instead of blowing out (bright sand shouldn't glow in a terrified scene).
+    col = (col - 0.35) * (1.0 + t * 0.3) + 0.35;
+    col -= t * 0.05;
     col = max(col, 0.0);
+    col = col / (1.0 + col * t * 0.45);
 
     // Unsteady light, as if every flame in the world is struggling.
     float wobble = noise(vec2(time * 7.0, 0.0)) - 0.5;
@@ -67,13 +69,17 @@ void main() {
 
     // Peripheral decay: dark, mossy veins crawl in at the edge of vision, then recede.
     if (Decay > 0.001) {
-        float n = noise(ca * 9.0 + time * 0.4) * 0.6 + noise(ca * 23.0 - time * 0.2) * 0.4;
-        float veins = smoothstep(0.45, 0.75, n);
-        float edge = smoothstep(0.45, 0.95, r);
-        float k = Decay * edge;
-        col = mix(col, col * vec3(0.72, 0.82, 0.58), k);
-        col *= 1.0 - k * (0.45 + 0.5 * veins);
+        float n = noise(ca * 7.0 + time * 0.4) * 0.55 + noise(ca * 19.0 - time * 0.25) * 0.3
+                + noise(ca * 45.0) * 0.15;
+        float veins = smoothstep(0.42, 0.62, n);
+        float edge = smoothstep(0.3, 0.8, r + (n - 0.5) * 0.25); // ragged, not a clean circle
+        float k = smoothstep(0.0, 0.4, Decay) * edge;
+        vec3 rot = mix(vec3(0.10, 0.13, 0.06), vec3(0.24, 0.30, 0.14), n); // dark moss
+        col = mix(col, rot, k * (0.55 + 0.45 * veins));
     }
+
+    // Tiny per-pixel noise hides the banding that dark gradients otherwise show.
+    col += (hash(gl_FragCoord.xy + fract(time) * 97.0) - 0.5) / 255.0;
 
     fragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
 }

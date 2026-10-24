@@ -41,12 +41,12 @@ final class CiCapture {
             }
             case 5 -> mc.player.setXRot(4f);
             case 160 -> shot(mc, "1-calm");
-            case 165 -> ClientState.forceTension(55f);
-            case 330 -> shot(mc, "2-uneasy");
+            case 162 -> ClientState.cueDecay();
+            case 168 -> shot(mc, "2-peripheral-decay");
+            case 175 -> ClientState.forceTension(55f);
+            case 330 -> shot(mc, "3-uneasy");
             case 335 -> ClientState.forceTension(100f);
-            case 500 -> shot(mc, "3-terrified");
-            case 505 -> ClientState.cueDecay();
-            case 511 -> shot(mc, "4-peripheral-decay");
+            case 500 -> shot(mc, "4-terrified");
             case 520 -> {
                 ClientState.forceTension(35f);
                 spawnHollow(mc);
