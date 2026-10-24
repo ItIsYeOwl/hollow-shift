@@ -1,0 +1,9 @@
+option.FOG_STRENGTH=Fog Strength
+option.FOG_STRENGTH.comment=How hard the fog closes in when it's dark.
+option.DESATURATION=Colour Drain
+option.DESATURATION.comment=How much colour drains out of the world.
+option.VIGNETTE=Vignette
+option.VIGNETTE.comment=How far the edges of the screen close in.
+option.GRAIN=Film Grain
+option.ABERRATION=Colour Fringing
+option.ABERRATION.comment=Red and blue fringes at the screen edges when dread is high.

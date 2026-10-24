@@ -1,0 +1,155 @@
+{
+  "ambient.cave": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "hollowshift:ambient/cave1",
+        "volume": 0.9
+      },
+      {
+        "name": "hollowshift:ambient/cave2",
+        "volume": 0.9
+      },
+      {
+        "name": "hollowshift:ambient/cave3",
+        "volume": 0.9
+      },
+      {
+        "name": "hollowshift:ambient/cave4",
+        "volume": 0.9
+      },
+      {
+        "name": "hollowshift:ambient/metal_grind",
+        "volume": 0.9
+      }
+    ]
+  },
+  "entity.cow.ambient": {
+    "replace": true,
+    "subtitle": "subtitles.entity.cow.ambient",
+    "sounds": [
+      {
+        "name": "mob/cow/say1",
+        "pitch": 0.82
+      },
+      {
+        "name": "mob/cow/say1",
+        "pitch": 0.9
+      },
+      {
+        "name": "mob/cow/say2",
+        "pitch": 0.82
+      },
+      {
+        "name": "mob/cow/say2",
+        "pitch": 0.9
+      },
+      {
+        "name": "mob/cow/say3",
+        "pitch": 0.82
+      },
+      {
+        "name": "mob/cow/say3",
+        "pitch": 0.9
+      },
+      {
+        "name": "mob/cow/say4",
+        "pitch": 0.82
+      },
+      {
+        "name": "mob/cow/say4",
+        "pitch": 0.9
+      }
+    ]
+  },
+  "entity.sheep.ambient": {
+    "replace": true,
+    "subtitle": "subtitles.entity.sheep.ambient",
+    "sounds": [
+      {
+        "name": "mob/sheep/say1",
+        "pitch": 0.82
+      },
+      {
+        "name": "mob/sheep/say1",
+        "pitch": 0.9
+      },
+      {
+        "name": "mob/sheep/say2",
+        "pitch": 0.82
+      },
+      {
+        "name": "mob/sheep/say2",
+        "pitch": 0.9
+      },
+      {
+        "name": "mob/sheep/say3",
+        "pitch": 0.82
+      },
+      {
+        "name": "mob/sheep/say3",
+        "pitch": 0.9
+      }
+    ]
+  },
+  "entity.pig.ambient": {
+    "replace": true,
+    "subtitle": "subtitles.entity.pig.ambient",
+    "sounds": [
+      {
+        "name": "mob/pig/say1",
+        "pitch": 0.82
+      },
+      {
+        "name": "mob/pig/say1",
+        "pitch": 0.9
+      },
+      {
+        "name": "mob/pig/say2",
+        "pitch": 0.82
+      },
+      {
+        "name": "mob/pig/say2",
+        "pitch": 0.9
+      },
+      {
+        "name": "mob/pig/say3",
+        "pitch": 0.82
+      },
+      {
+        "name": "mob/pig/say3",
+        "pitch": 0.9
+      }
+    ]
+  },
+  "entity.chicken.ambient": {
+    "replace": true,
+    "subtitle": "subtitles.entity.chicken.ambient",
+    "sounds": [
+      {
+        "name": "mob/chicken/say1",
+        "pitch": 0.82
+      },
+      {
+        "name": "mob/chicken/say1",
+        "pitch": 0.9
+      },
+      {
+        "name": "mob/chicken/say2",
+        "pitch": 0.82
+      },
+      {
+        "name": "mob/chicken/say2",
+        "pitch": 0.9
+      },
+      {
+        "name": "mob/chicken/say3",
+        "pitch": 0.82
+      },
+      {
+        "name": "mob/chicken/say3",
+        "pitch": 0.9
+      }
+    ]
+  }
+}

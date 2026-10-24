@@ -1,0 +1,17 @@
+{
+	"entity.hollowshift.hollow": "The Hollow",
+	"item.hollowshift.burnt_torch": "Burnt-out Torch",
+
+	"subtitles.hollowshift.breathing": "Something breathes",
+	"subtitles.hollowshift.whisper": "Whispering",
+	"subtitles.hollowshift.metal_grind": "Metal grinds somewhere below",
+	"subtitles.hollowshift.hollow_step": "Footsteps",
+	"subtitles.hollowshift.hollow_catch": "It found you",
+	"subtitles.hollowshift.hollow_vanish": "Something is gone",
+
+	"subtitles.hollowshift.lie.footsteps_behind": "Footsteps behind you",
+	"subtitles.hollowshift.lie.door_creaks": "Door creaks",
+	"subtitles.hollowshift.lie.breathing_close": "Breathing, close",
+	"subtitles.hollowshift.lie.something_watches": "Something watches",
+	"subtitles.hollowshift.lie.your_name": "Someone says your name"
+}

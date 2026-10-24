@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"id": "hollowshift",
+	"version": "${version}",
+	"name": "The Hollow Shift",
+	"description": "The world subtly reshapes itself when you aren't looking. Psychological horror: a pacing director, an adaptive stalker, tension-driven fog and screen effects, and a game that sometimes lies to you.",
+	"authors": ["You"],
+	"license": "All-Rights-Reserved",
+	"icon": "assets/hollowshift/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": ["com.hollowshift.HollowShift"],
+		"client": ["com.hollowshift.client.HollowShiftClient"]
+	},
+	"mixins": [
+		{
+			"config": "hollowshift.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.0",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"iris": "*"
+	}
+}

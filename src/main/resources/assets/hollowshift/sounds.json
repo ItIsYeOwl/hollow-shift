@@ -1,0 +1,85 @@
+{
+  "ambient.drone": {
+    "sounds": [
+      {
+        "name": "hollowshift:ambient/drone",
+        "stream": true
+      }
+    ]
+  },
+  "ambient.heartbeat": {
+    "sounds": [
+      "hollowshift:ambient/heartbeat"
+    ]
+  },
+  "ambient.breathing": {
+    "sounds": [
+      "hollowshift:ambient/breath1",
+      "hollowshift:ambient/breath2"
+    ],
+    "subtitle": "subtitles.hollowshift.breathing"
+  },
+  "ambient.whisper": {
+    "sounds": [
+      "hollowshift:ambient/whisper1",
+      "hollowshift:ambient/whisper2",
+      "hollowshift:ambient/whisper3"
+    ],
+    "subtitle": "subtitles.hollowshift.whisper"
+  },
+  "ambient.metal_grind": {
+    "sounds": [
+      "hollowshift:ambient/metal_grind"
+    ],
+    "subtitle": "subtitles.hollowshift.metal_grind"
+  },
+  "entity.hollow.step": {
+    "sounds": [
+      "hollowshift:entity/hollow_step1",
+      "hollowshift:entity/hollow_step2"
+    ],
+    "subtitle": "subtitles.hollowshift.hollow_step"
+  },
+  "entity.hollow.catch": {
+    "sounds": [
+      "hollowshift:entity/hollow_catch"
+    ],
+    "subtitle": "subtitles.hollowshift.hollow_catch"
+  },
+  "entity.hollow.vanish": {
+    "sounds": [
+      "hollowshift:entity/hollow_vanish"
+    ],
+    "subtitle": "subtitles.hollowshift.hollow_vanish"
+  },
+  "lie.footsteps_behind": {
+    "sounds": [
+      "hollowshift:silent"
+    ],
+    "subtitle": "subtitles.hollowshift.lie.footsteps_behind"
+  },
+  "lie.door_creaks": {
+    "sounds": [
+      "hollowshift:silent"
+    ],
+    "subtitle": "subtitles.hollowshift.lie.door_creaks"
+  },
+  "lie.breathing_close": {
+    "sounds": [
+      "hollowshift:silent"
+    ],
+    "subtitle": "subtitles.hollowshift.lie.breathing_close"
+  },
+  "lie.something_watches": {
+    "sounds": [
+      "hollowshift:silent"
+    ],
+    "subtitle": "subtitles.hollowshift.lie.something_watches"
+  },
+  "lie.your_name": {
+    "sounds": [
+      "hollowshift:silent"
+    ],
+    "subtitle": "subtitles.hollowshift.lie.your_name"
+  }
+}
