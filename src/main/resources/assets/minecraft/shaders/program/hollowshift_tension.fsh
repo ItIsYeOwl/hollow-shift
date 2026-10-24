@@ -72,7 +72,7 @@ void main() {
         float n = noise(ca * 7.0 + time * 0.4) * 0.55 + noise(ca * 19.0 - time * 0.25) * 0.3
                 + noise(ca * 45.0) * 0.15;
         float veins = smoothstep(0.42, 0.62, n);
-        float edge = smoothstep(0.3, 0.8, r + (n - 0.5) * 0.25); // ragged, not a clean circle
+        float edge = smoothstep(0.45, 0.9, r + (n - 0.5) * 0.25); // ragged, not a clean circle
         float k = smoothstep(0.0, 0.4, Decay) * edge;
         vec3 rot = mix(vec3(0.10, 0.13, 0.06), vec3(0.24, 0.30, 0.14), n); // dark moss
         col = mix(col, rot, k * (0.55 + 0.45 * veins));

@@ -86,6 +86,21 @@ jobs:
           cp run/logs/latest.log client-latest.log 2>/dev/null || true
           ls run/screenshots
 
+      - name: Publish the tested build on the Releases page
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          JAR=$(ls build/libs/hollow-shift-*.jar | grep -v sources)
+          gh release delete latest --yes --cleanup-tag 2>/dev/null || true
+          gh release create latest "$JAR" build/libs/HollowShift-Shaders.zip run/screenshots/*.png \
+            --target "${GITHUB_SHA}" --prerelease \
+            --title "The Hollow Shift (latest tested build)" \
+            --notes "Built and tested automatically from ${GITHUB_SHA}: compiled, started a server, and ran the game client in a world. The screenshots are from that test run.
+
+          **Install:** put the .jar in .minecraft/mods/ together with Fabric API, for Minecraft 1.21.1 with Fabric Loader.
+          **Optional:** put HollowShift-Shaders.zip in .minecraft/shaderpacks/ (needs Iris)."
+
       - name: Save logs and screenshots to the ci-output branch
         if: always()
         run: |
