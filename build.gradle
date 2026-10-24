@@ -101,3 +101,6 @@ tasks.register('simulate', JavaExec) {
 	mainClass = 'com.hollowshift.director.DirectorSimulation'
 	args '20', '500'
 }
+
+// src/test holds the Director simulation (run with ./gradlew simulate), not unit tests.
+tasks.named('test') { failOnNoDiscoveredTests = false }
