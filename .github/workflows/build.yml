@@ -1,13 +1,28 @@
 name: Build
 
-# Builds the mod on GitHub's servers every time you push.
+# Builds the mod on GitHub's servers every time you push to main.
 # The finished files appear under Actions -> (latest run) -> Artifacts -> "hollow-shift".
+#
+# After building it also:
+#   1. checks the places the mod hooks into Minecraft really exist,
+#   2. starts a test server with the mod,
+#   3. starts the real game client, loads a world, and takes screenshots of the effects.
+# Logs and screenshots are saved to the "ci-output" branch.
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      HOLLOWSHIFT_CI: "1"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,33 +42,6 @@ jobs:
           set -o pipefail
           ./gradlew build --stacktrace 2>&1 | tee build.log
 
-      # Turns the build's error messages into annotations, so they show on the run's summary page
-      # (and can be read through GitHub's API without downloading the full log).
-      - name: Report build errors
-        if: failure()
-        run: |
-          python3 - <<'PY'
-          import re
-          log = open("build.log", encoding="utf-8", errors="replace").read().splitlines()
-          def esc(s):
-              return s.replace("%", "%25").replace("\r", "").replace("\n", "%0A")
-          # Compiler errors: file.java:123: error: message (+ the following detail lines)
-          errs = []
-          for i, line in enumerate(log):
-              m = re.search(r"(src/[^\s:]+\.java):(\d+): error: (.*)", line)
-              if m:
-                  detail = [l.strip() for l in log[i + 1:i + 4] if re.match(r"\s+(symbol|location|required|found|reason)", l)]
-                  errs.append(f"{m.group(1)}:{m.group(2)}: {m.group(3)} {' | '.join(detail)}")
-          for chunk in range(0, min(len(errs), 160), 40):
-              print("::error title=Compile errors " + str(chunk + 1) + "::" + esc("\n".join(errs[chunk:chunk + 40])))
-          # Gradle's own explanation
-          text = "\n".join(log)
-          for m in re.finditer(r"\* What went wrong:\n(.*?)(?:\n\* Try:|\Z)", text, re.S):
-              print("::error title=What went wrong::" + esc(m.group(1).strip()[:6000]))
-          # Last lines, in case neither pattern matched
-          print("::error title=Log tail::" + esc("\n".join(log[-60:])[:6000]))
-          PY
-
       - name: Check the Director's pacing rules
         run: ./gradlew simulate
 
@@ -65,3 +53,49 @@ jobs:
             build/libs/hollow-shift-*.jar
             !build/libs/*-sources.jar
             build/libs/HollowShift-Shaders.zip
+
+      - name: Check the mod's hooks into Minecraft
+        run: |
+          JAR=""
+          for j in $(find ~/.gradle/caches .gradle -name '*.jar' 2>/dev/null | grep -i minecraft | grep -v sources); do
+            if unzip -l "$j" 2>/dev/null | grep -q 'net/minecraft/client/renderer/FogRenderer.class'; then JAR="$j"; break; fi
+          done
+          {
+            echo "jar: $JAR"
+            echo "== FogRenderer"; javap -p -cp "$JAR" net.minecraft.client.renderer.FogRenderer | grep -E "setupFog|setupColor|fogRed|fogGreen|fogBlue"
+            echo "== GameRenderer.render calls renderLevel?"; javap -p -c -cp "$JAR" net.minecraft.client.renderer.GameRenderer | grep -E "renderLevel:\(Lnet/minecraft/client/DeltaTracker;\)V" | head -3
+            echo "== mixin warnings in build"; grep -iE "mixin|cannot find target|@Inject" build.log | head -20
+          } > hooks.txt 2>&1
+          cat hooks.txt
+
+      - name: Start a test server with the mod
+        run: |
+          mkdir -p run && echo "eula=true" > run/eula.txt
+          printf 'online-mode=false\nlevel-name=world\nspawn-protection=0\n' > run/server.properties
+          timeout 900 ./gradlew runServer --args="--nogui" > server.log 2>&1 || true
+          cp run/logs/latest.log server-latest.log 2>/dev/null || true
+          grep -q "dedicated server started with The Hollow Shift" server.log
+
+      - name: Start the game and take screenshots
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb libgl1-mesa-dri mesa-utils > /dev/null
+          mkdir -p run/saves && cp -r run/world run/saves/ci
+          printf 'onboardAccessibility:false\nrenderDistance:8\nsimulationDistance:6\nmaxFps:30\npauseOnLostFocus:false\ntutorialStep:none\nskipMultiplayerWarning:true\nnarrator:0\nguiScale:2\n' > run/options.txt
+          export LIBGL_ALWAYS_SOFTWARE=1
+          timeout 1200 xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runClient --args="--quickPlaySingleplayer ci --width 1280 --height 720" > client.log 2>&1 || true
+          cp run/logs/latest.log client-latest.log 2>/dev/null || true
+          ls run/screenshots
+
+      - name: Save logs and screenshots to the ci-output branch
+        if: always()
+        run: |
+          OUT=$(mktemp -d)
+          cp -f build.log server.log server-latest.log client.log client-latest.log hooks.txt "$OUT"/ 2>/dev/null || true
+          cp -rf run/screenshots "$OUT"/ 2>/dev/null || true
+          cp -rf run/crash-reports "$OUT"/ 2>/dev/null || true
+          cd "$OUT"
+          echo "commit ${GITHUB_SHA}" > INFO.txt
+          git init -q -b ci-output
+          git add -A
+          git -c user.name="ci" -c user.email="ci@users.noreply.github.com" commit -q -m "CI output for ${GITHUB_SHA}"
+          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" ci-output

@@ -59,7 +59,7 @@ public final class HollowSpawner {
 
     // ------------------------------------------------------------------------
 
-    private static boolean spawn(ServerPlayer p, BlockPos pos, HollowEntity.Mode mode, int lifetime) {
+    public static boolean spawn(ServerPlayer p, BlockPos pos, HollowEntity.Mode mode, int lifetime) {
         HollowEntity h = ModEntities.HOLLOW.create(p.serverLevel());
         if (h == null) return false;
         h.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0, 0);

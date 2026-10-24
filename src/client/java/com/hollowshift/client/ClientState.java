@@ -12,6 +12,7 @@ import net.minecraft.sounds.SoundSource;
 public final class ClientState {
 
     private static float targetTension;
+    private static Float forcedTension;    // automated screenshot test only
     private static float tension;          // 0..100, smoothed
     private static int silenceTicks;
     private static float decay;            // 0..1, fades out
@@ -44,12 +45,24 @@ public final class ClientState {
 
     static void register() {
         ClientPlayNetworking.registerGlobalReceiver(ModPayloads.TensionSync.TYPE,
-                (payload, context) -> context.client().execute(() -> targetTension = payload.tension()));
+                (payload, context) -> context.client().execute(() -> {
+                    if (forcedTension == null) targetTension = payload.tension();
+                }));
 
         ClientPlayNetworking.registerGlobalReceiver(ModPayloads.Cue.TYPE,
                 (payload, context) -> context.client().execute(() -> cue(context.client(), payload.cue(), payload.ticks())));
 
         ClientTickEvents.END_CLIENT_TICK.register(ClientState::tick);
+    }
+
+    /** For the automated screenshot test: pin tension to a value, ignoring the server. */
+    static void forceTension(float value) {
+        forcedTension = value;
+        targetTension = value;
+    }
+
+    static void cueDecay() {
+        decay = 1f;
     }
 
     private static void cue(Minecraft mc, String cue, int t) {

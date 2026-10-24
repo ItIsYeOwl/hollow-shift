@@ -33,6 +33,7 @@ public final class HollowShift implements ModInitializer {
         DirectorHook.register();
         FakeMobs.register();
         HollowCommands.register();
+        CiHooks.register();
         LOG.info("The world has begun to shift.");
     }
 }

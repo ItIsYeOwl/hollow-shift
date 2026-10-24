@@ -24,6 +24,7 @@ public final class HollowShiftClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.HOLLOW, HollowRenderer::new);
 
         ClientState.register();
+        CiCapture.register();
 
         // The atmosphere pack: muted foliage, unsteady torches, replaced cave sounds, off-key animals.
         // On by default; players can switch it off in Options > Resource Packs.
