@@ -24,7 +24,35 @@ jobs:
       - name: Build with Gradle
         run: |
           chmod +x gradlew
-          ./gradlew build --stacktrace
+          set -o pipefail
+          ./gradlew build --stacktrace 2>&1 | tee build.log
+
+      # Turns the build's error messages into annotations, so they show on the run's summary page
+      # (and can be read through GitHub's API without downloading the full log).
+      - name: Report build errors
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          import re
+          log = open("build.log", encoding="utf-8", errors="replace").read().splitlines()
+          def esc(s):
+              return s.replace("%", "%25").replace("\r", "").replace("\n", "%0A")
+          # Compiler errors: file.java:123: error: message (+ the following detail lines)
+          errs = []
+          for i, line in enumerate(log):
+              m = re.search(r"(src/[^\s:]+\.java):(\d+): error: (.*)", line)
+              if m:
+                  detail = [l.strip() for l in log[i + 1:i + 4] if re.match(r"\s+(symbol|location|required|found|reason)", l)]
+                  errs.append(f"{m.group(1)}:{m.group(2)}: {m.group(3)} {' | '.join(detail)}")
+          for chunk in range(0, min(len(errs), 160), 40):
+              print("::error title=Compile errors " + str(chunk + 1) + "::" + esc("\n".join(errs[chunk:chunk + 40])))
+          # Gradle's own explanation
+          text = "\n".join(log)
+          for m in re.finditer(r"\* What went wrong:\n(.*?)(?:\n\* Try:|\Z)", text, re.S):
+              print("::error title=What went wrong::" + esc(m.group(1).strip()[:6000]))
+          # Last lines, in case neither pattern matched
+          print("::error title=Log tail::" + esc("\n".join(log[-60:])[:6000]))
+          PY
 
       - name: Check the Director's pacing rules
         run: ./gradlew simulate
