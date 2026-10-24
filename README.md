@@ -36,7 +36,7 @@ learns where you live.
 
 ## Building
 
-Needs **Java 21**. From this folder:
+Needs **Java 25** to run the build tools (the mod itself runs on the Java 21 that Minecraft 1.21.1 uses). From this folder:
 
 ```
 ./gradlew build          (Windows: gradlew.bat build)
